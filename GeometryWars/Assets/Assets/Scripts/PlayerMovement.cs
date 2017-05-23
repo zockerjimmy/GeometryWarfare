@@ -4,24 +4,35 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
 
-    public Rigidbody2D _playerRigidbody;
-    public float fMoveSpeed = 5.0f;
-	void Start ()
+    
+    public float fMoveSpeed = 4.5f;
+    private float fDeadzone = 0.25f;
+    Vector3 latestRotation;
+
+    void Start ()
     {
-        _playerRigidbody = GetComponent<Rigidbody2D>();
+    
 	}
 	
 	
-	void FixedUpdate ()
+	void Update ()
     {
-        float fMoveX = Input.GetAxis("LeftJoystickX");
-        float fMoveY = Input.GetAxis("LeftJoystickY");
+        float fLeftMoveX = Input.GetAxis("LeftJoystickX");
+        float fLeftMoveY = Input.GetAxis("LeftJoystickY");
+        float fRightMoveX = Input.GetAxis("RightJoystickX");
+        float fRightMoveY = Input.GetAxis("RightJoystickY");
 
-        if (fMoveX > 0.5f || fMoveX < -0.5f || fMoveY > 0.5f || fMoveY < -0.5f)
+        transform.position += (Vector3.right* fLeftMoveX + -1*(Vector3.up* fLeftMoveY)).normalized*fMoveSpeed*Time.deltaTime;
+        Vector2 v = new Vector2(Input.GetAxis("RightJoystickX"), Input.GetAxis("RightJoystickY"));
+        if (v.magnitude < fDeadzone)
         {
-            _playerRigidbody.(new Vector2(fMoveX + fMoveSpeed * Time.deltaTime, -1 * (fMoveY + fMoveSpeed * Time.deltaTime)));
+            latestRotation = transform.eulerAngles;
         }
-        else _playerRigidbody.velocity = _playerRigidbody.velocity = new Vector2(0.0f, 0.0f);
+        else
+        {
+            transform.eulerAngles = new Vector3(0, 0, Mathf.Atan2(-1 * (Input.GetAxis("RightJoystickY")), Input.GetAxis("RightJoystickX")) * 180 / Mathf.PI);
+            latestRotation = transform.eulerAngles;
+        }
         
     }
    
