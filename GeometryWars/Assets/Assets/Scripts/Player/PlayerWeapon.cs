@@ -2,27 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerWeapon : MonoBehaviour {
+public class PlayerWeapon : MonoBehaviour
+{
 
     private Transform bulletSpawn;
     public float fShootSpeed = 0.2f;
-    public bool bShot = false;
     public GameObject _normalBullet;
 
-	void Start ()
+    void Start()
     {
         bulletSpawn = GameObject.Find("BulletSpawn").transform;
         _normalBullet = Resources.Load("Prefabs/NormalBullet") as GameObject;
-	}
-	
-	void Update ()
+    }
+
+    void Update()
     {
 
-	}
+    }
 
     public void Shoot()
     {
-        GameObject dummy = Instantiate(_normalBullet, bulletSpawn.position, bulletSpawn.rotation) as GameObject;
-
+        Instantiate(_normalBullet, bulletSpawn.position, bulletSpawn.rotation);
     }
 }
