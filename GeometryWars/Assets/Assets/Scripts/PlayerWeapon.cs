@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerWeapon : MonoBehaviour {
 
     private Transform bulletSpawn;
-    public float fShootSpeed = 0.25f;
+    public float fShootSpeed = 0.2f;
     public bool bShot = false;
     public GameObject _normalBullet;
 
@@ -22,6 +22,7 @@ public class PlayerWeapon : MonoBehaviour {
 
     public void Shoot()
     {
-        GameObject dummy = Instantiate(_normalBullet, bulletSpawn) as GameObject;
+        GameObject dummy = Instantiate(_normalBullet, bulletSpawn.position, bulletSpawn.rotation) as GameObject;
+
     }
 }
