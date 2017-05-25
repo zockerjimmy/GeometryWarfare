@@ -6,7 +6,7 @@ public class Bullet : MonoBehaviour
 {
 
     private float fLifetime = 2.0f;
-    private float fBulletSpeed = 50.0f;
+    private float fBulletSpeed = 2.0f;
     private float fBulletDamage = 10.0f;
     private Rigidbody2D _bullet;
 
@@ -26,7 +26,7 @@ public class Bullet : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        _bullet.AddForce(_bullet.transform.right * fBulletSpeed);
+        _bullet.AddForce(_bullet.transform.right * fBulletSpeed, ForceMode2D.Impulse);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
