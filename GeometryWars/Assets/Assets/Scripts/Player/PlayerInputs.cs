@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class PlayerInputs : MonoBehaviour
 {
-
     private PlayerWeapon _playerWeapon;
     private PlayerMovement _playerMovement;
+    private Player _player;
+
     private float fTimeSinceLastShot = 0.0f;
     private bool bShot = false;
 
@@ -22,6 +23,7 @@ public class PlayerInputs : MonoBehaviour
     {
         _playerWeapon = GetComponent<PlayerWeapon>();
         _playerMovement = GetComponent<PlayerMovement>();
+        _player = GetComponent<Player>();
     }
 
     void Update()
@@ -72,5 +74,21 @@ public class PlayerInputs : MonoBehaviour
         }
 
         #endregion
+        if (_player.bCanActivate && !_player.bIsInMenus)
+        {
+            if (Input.GetKeyDown(KeyCode.Joystick1Button0))
+            {
+                _player.bIsInMenus = true;
+            }
+        }
+        else if (_player.bCanActivate && _player.bIsInMenus)
+        {
+            if (Input.GetKeyDown(KeyCode.Joystick1Button1))
+            {
+                _player.bIsInMenus = false;
+            }
+        }
+
+
     }
 }
