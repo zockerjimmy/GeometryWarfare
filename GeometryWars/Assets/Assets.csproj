@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Activatable.cs" />
     <Compile Include="Assets\Scripts\Enemys\Enemy.cs" />
+    <Compile Include="Assets\Scripts\Grid.cs" />
     <Compile Include="Assets\Scripts\Hitable.cs" />
     <Compile Include="Assets\Scripts\Mainbase.cs" />
     <Compile Include="Assets\Scripts\Player\Bullet.cs" />
@@ -89,6 +90,9 @@
     <Compile Include="Assets\Scripts\Player\PlayerInputs.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerWeapon.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Asset\grid.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
