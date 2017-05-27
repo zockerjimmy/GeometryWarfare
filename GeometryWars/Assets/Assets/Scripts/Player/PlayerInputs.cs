@@ -79,6 +79,7 @@ public class PlayerInputs : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Joystick1Button0))
             {
                 _player.bIsInMenus = true;
+                _player.gActivatableObject.SendMessage("Activate", 2);
             }
         }
         else if (_player.bCanActivate && _player.bIsInMenus)
@@ -86,6 +87,18 @@ public class PlayerInputs : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Joystick1Button1))
             {
                 _player.bIsInMenus = false;
+                _player.gActivatableObject.SendMessage("Activate", 1);
+            }
+            if (_player.gActivatableObject.tag == "Mainbase")
+            {
+                if (Input.GetKeyDown(KeyCode.Joystick1Button2))
+                {
+                    if (_player.fScrapInCargo > 0.0f)
+                    {
+                        _player.gActivatableObject.SendMessage("AddScrap", _player.fScrapInCargo);
+                        _player.fScrapInCargo -= _player.fScrapInCargo;
+                    }
+                }
             }
         }
 

@@ -25,9 +25,5 @@ public class PlayerGUI : MonoBehaviour
         {
             GUI.Box(new Rect(fScreenX * 40.0f, fScreenY * 80.0f, fScreenX * 10.0f, fScreenY * 10.0f), "ACTIVATE");
         }
-        else if (_player.bIsInMenus)
-        {
-            GUI.Box(new Rect(fScreenX * 30.0f, fScreenY * 30.0f, fScreenX * 30.0f, fScreenY * 30.0f), "MENU");
-        }
     }
 }
