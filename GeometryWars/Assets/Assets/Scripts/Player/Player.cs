@@ -11,24 +11,18 @@ public class Player : MonoBehaviour
     public bool bCanActivate = false;
     public bool bIsInMenus = false;
 
-    void Start()
-    {
-
-    }
-
-    void Update()
-    {
-
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //if collide with mainbase
+        //prepare interaction between player and mainbase
         if (collision.gameObject.name == "Player1MainBase")
         {
             gActivatableObject = collision.gameObject;
-            gActivatableObject.SendMessage("GetPlayer", GetComponent<Player>());
+            gActivatableObject.GetComponent<Activatable>().GetPlayer(GetComponent<Player>());
             bCanActivate = true;
         }
+        //if collide with scrap
+        //collect and destroy scrap
         if (collision.gameObject.tag == "Scrap")
         {
             collect("Scrap");
@@ -38,10 +32,11 @@ public class Player : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        //if exit mainbase trigger
         if (collision.gameObject.name == "Player1MainBase")
         {
-            gActivatableObject.SendMessage("LosePlayer", GetComponent<Player>());
-            gActivatableObject.SendMessage("Activate", 1);
+            //set all links between player and mainbase to default
+            gActivatableObject.GetComponent<Activatable>().OutOfRange();
             gActivatableObject = null;
             bCanActivate = false;
             bIsInMenus = false;

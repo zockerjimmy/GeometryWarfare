@@ -17,6 +17,7 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
+        //check lifetime and delete object
         if (fLifetime >= 0.0f)
         {
             fLifetime -= Time.deltaTime;
@@ -26,11 +27,13 @@ public class Bullet : MonoBehaviour
             Destroy(this.gameObject);
         }
 
+        //move object
         _bullet.AddForce(_bullet.transform.right * fBulletSpeed, ForceMode2D.Impulse);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //if bullet hit enemy
         if (collision.gameObject.tag == "Enemy")
         {
             collision.gameObject.GetComponent<Hitable>().GetHit(fBulletDamage);

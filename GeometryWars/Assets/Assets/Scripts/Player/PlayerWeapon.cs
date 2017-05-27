@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerWeapon : MonoBehaviour
 {
-
     private Transform bulletSpawn;
     public float fShootSpeed = 0.2f;
     public GameObject _normalBullet;
