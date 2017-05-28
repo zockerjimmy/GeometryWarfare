@@ -4,8 +4,84 @@ using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshFilter))]
+
+class PointMass
+{
+    public Vector3 Position;
+    public Vector3 Velocity;
+    public float InverseMass;
+
+    private Vector3 acceleration;
+    private float damping = 0.98f;
+
+    public PointMass(Vector3 position, float invMass)
+    {
+        Position = position;
+        InverseMass = invMass;
+    }
+
+    public void ApplyForce(Vector3 force)
+    {
+        acceleration += force * InverseMass;
+    }
+
+    public void IncreaseDamping(float factor)
+    {
+        damping *= factor;
+    }
+
+    public void Update()
+    {
+        Velocity += acceleration;
+        Position += Velocity;
+        acceleration = Vector3.zero;
+        if (Velocity.sqrMagnitude < 0.001f * 0.001f) Velocity = Vector3.zero;
+
+        Velocity *= damping;
+        damping = 0.98f;
+    }
+}
+
+ struct Spring
+{
+    public PointMass End1;
+    public PointMass End2;
+    public float TargetLength;
+    public float Stiffness;
+    public float Damping;
+
+    public Spring(PointMass end1, PointMass end2, float stiffness, float damping)
+    {
+        End1 = end1;
+        End2 = end2;
+        Stiffness = stiffness;
+        Damping = damping;
+        TargetLength = Vector3.Distance(End1.Position, End2.Position) * 0.95f;
+    }
+
+    public void Update()
+    {
+        var x = End1.Position - End2.Position;
+
+        float length = x.magnitude;
+        if (length <= TargetLength)
+        {
+            return;
+        }
+
+        x = (x / length) * (length - TargetLength);
+        var dv = End2.Velocity - End1.Velocity;
+        var force = Stiffness * x - dv * Damping;
+
+        End1.ApplyForce(-force);
+        End2.ApplyForce(force);
+    }
+}
+
 public class GridMesh : MonoBehaviour
 {
+    public int gridWidth;
+    public int gridHeight;
 
     /* public int GridSize;
 
@@ -41,9 +117,9 @@ public class GridMesh : MonoBehaviour
      }*/
 
     Spring[] springs;
-    PointMass[,] points;  
+    PointMass[,] points;
 
-    public GridMesh(Rect size, Vector2 spacing)
+    /*public GridMesh(Rect size, Vector2 spacing)
     {
         var springList = new List<Spring>();
 
@@ -82,99 +158,94 @@ public class GridMesh : MonoBehaviour
                     springList.Add(new Spring(points[x, y - 1], points[x, y], stiffness, damping));
             }
         springs = springList.ToArray();
+    }*/
+
+    public void GGridMesh()
+    {
+      /*  MeshFilter filter = gameObject.GetComponent<MeshFilter>();
+        var mesh = new Mesh();
+        var verticies = new List<Vector3>();
+        var indicies = new List<int>();
+
+        */
+
+        var springList = new List<Spring>();
+
+        int numColumns = gridWidth + 1;
+        int numRows = gridHeight + 1;
+        points = new PointMass[numColumns, numRows];
+
+        PointMass[,] fixedPoints = new PointMass[numColumns, numRows];
+
+        int column = 0, row = 0;
+        for (int u = 0, y = 0; y <= gridHeight; y++, u++)
+        {
+            for (int i = 0, x = 0; x <= gridWidth; x++, i++)
+            {
+                points[column, row] = new PointMass(new Vector3(x, y, 0), 1);
+                fixedPoints[column, row] = new PointMass(new Vector3(x, y, 0), 0);
+               /* verticies.Add(new Vector3(x, y, 0));
+                indicies.Add(4 * i + 0);*/
+                /* indicies.Add(4 * i + 0);
+                verticies.Add(new Vector3(x, y, 0));*/
+                /*indicies.Add(i);
+                indicies.Add(4 * i + 1);*/
+                column++;
+            }
+           /* indicies.Add(4 * u + 2);
+            indicies.Add(4 * u + 3);*/
+            row++;
+            column = 0;
+        }
+
+        for (int i = 0, y = 0; y <= gridHeight; y++)
+            for (int x = 0; x <= gridWidth; x++, i++)
+            {
+                if (x == 0 || y == 0 || x == gridWidth || y == gridHeight)
+                    springList.Add(new Spring(fixedPoints[x, y], points[x, y], 0.1f, 0.1f));
+                else if (x % 3 == 0 && y % 3 == 0)
+                    springList.Add(new Spring(fixedPoints[x, y], points[x, y], 0.002f, 0.002f));
+
+                const float stiffness = 0.28f;
+                const float damping = 0.06f;
+                if (x > 0)
+                    springList.Add(new Spring(points[x - 1, y], points[x, y], stiffness, damping));
+                if (y > 0)
+                    springList.Add(new Spring(points[x, y - 1], points[x, y], stiffness, damping));
+            }
+        springs = springList.ToArray();
+
+
+
+/*
+        foreach (PointMass mass in points)
+        {
+            verticies.Add(mass.Position);
+        }
+        mesh.vertices = verticies.ToArray();
+        mesh.SetIndices(indicies.ToArray(), MeshTopology.Lines, 0);
+        filter.mesh = mesh;      
+        MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
+        meshRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        meshRenderer.material.color = Color.white;*/
     }
 
-    private void Start()
+    private void Awake()
     {
-        //GGridMesh(new Rect(0,0, 5f,5f), new Vector2(1f,1f));
+        GGridMesh();
     }
 
     public void Update()
     {
-       // Debug.Log(springs.Length);
-        /*foreach (Spring spring in springs)
+        foreach (Spring spring in springs)
         {
             spring.Update();
-        }*/
-        /* foreach (PointMass mass in points)
+        }
+         foreach (PointMass mass in points)
          {
              mass.Update();
-         }*/
+         }
     }
-
-    private class PointMass
-    {
-        public Vector3 Position;
-        public Vector3 Velocity;
-        public float InverseMass;
-
-        private Vector3 acceleration;
-        private float damping = 0.98f;
-
-        public PointMass(Vector3 position, float invMass)
-        {
-            Position = position;
-            InverseMass = invMass;
-        }
-
-        public void ApplyForce(Vector3 force)
-        {
-            acceleration += force * InverseMass;
-        }
-
-        public void IncreaseDamping(float factor)
-        {
-            damping *= factor;
-        }
-
-        public void Update()
-        {
-            Velocity += acceleration;
-            Position += Velocity;
-            acceleration = Vector3.zero;
-            if (Velocity.sqrMagnitude < 0.001f * 0.001f) Velocity = Vector3.zero;
-
-            Velocity *= damping;
-            damping = 0.98f;
-        }
-    }
-
-    private struct Spring
-    {
-        public PointMass End1;
-        public PointMass End2;
-        public float TargetLength;
-        public float Stiffness;
-        public float Damping;
-
-        public Spring(PointMass end1, PointMass end2, float stiffness, float damping)
-        {
-            End1 = end1;
-            End2 = end2;
-            Stiffness = stiffness;
-            Damping = damping;
-            TargetLength = Vector3.Distance(End1.Position, End2.Position) * 0.95f;
-        }
-
-        public void Update()
-        {
-            var x = End1.Position - End2.Position;
-
-            float length = x.magnitude;
-            if (length <= TargetLength)
-            {
-                return;
-            }
-
-            x = (x / length) * (length - TargetLength);
-            var dv = End2.Velocity - End1.Velocity;
-            var force = Stiffness * x - dv * Damping;
-
-            End1.ApplyForce(-force);
-            End2.ApplyForce(force);
-        }
-    }
-
 
     public void ApplyDirectedForce(Vector3 force, Vector3 position, float radius)
     {
