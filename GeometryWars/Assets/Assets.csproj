@@ -81,6 +81,7 @@
     <Compile Include="Assets\Scripts\Activatable.cs" />
     <Compile Include="Assets\Scripts\Enemys\Enemy.cs" />
     <Compile Include="Assets\Scripts\Grid.cs" />
+    <Compile Include="Assets\Scripts\GridMesh.cs" />
     <Compile Include="Assets\Scripts\Hitable.cs" />
     <Compile Include="Assets\Scripts\Mainbase.cs" />
     <Compile Include="Assets\Scripts\Player\Bullet.cs" />

@@ -45,7 +45,7 @@ public class Grid : MonoBehaviour
         int[] triangles = new int[xSize * ySize * 6];
         for (int ti = 0, vi = 0, y = 0; y < ySize; y++, vi++)
         {
-            for (int x = 0; x < xSize; x++, ti+=6, vi++)
+            for (int x = 0; x < xSize; x++, ti += 6, vi++)
             {
                 triangles[ti] = vi;
                 triangles[ti + 3] = triangles[ti + 2] = vi + 1;
@@ -53,6 +53,7 @@ public class Grid : MonoBehaviour
                 triangles[ti + 5] = vi + xSize + 2;
             }
         }
+        
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
     }
