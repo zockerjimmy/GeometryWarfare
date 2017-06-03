@@ -50,7 +50,11 @@ public class PlayerInputs : MonoBehaviour
         //rotate
         if (rightJoystickInput.magnitude >= fDeadzone)
         {
-            _playerMovement.RotatePlayer(fRightJoystickX, fRightJoystickY);
+            _playerWeapon.RotateGun(fRightJoystickX, fRightJoystickY);
+        }
+        else if (rightJoystickInput.magnitude < fDeadzone)
+        {
+            _playerWeapon.RotateGun(0.0f, 0.0f);
         }
 
         #endregion

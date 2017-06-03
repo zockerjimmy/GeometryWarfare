@@ -233,6 +233,8 @@ public class GridMesh : MonoBehaviour
     private void Awake()
     {
         GGridMesh();
+
+       
     }
 
     public void Update()
@@ -244,8 +246,55 @@ public class GridMesh : MonoBehaviour
          foreach (PointMass mass in points)
          {
              mass.Update();
-         }
+         }       
     }
+
+     /* public Vector2 ToVec2(Vector3 v)
+      {
+          // do a perspective projection
+          float factor = (v.z + 2000) / 2000;
+          return (new Vector2(v.x, v.y) - (Screen.width + Screen.height) / 2f) * factor + screenSize / 2;
+      } */
+
+   /* public void Draw(SpriteRenderer spriteBatch)
+    {
+        int width = points.GetLength(0);
+        int height = points.GetLength(1);
+        Color color = new Color(30, 30, 139, 85);   // dark blue
+
+        for (int y = 1; y < height; y++)
+        {
+            for (int x = 1; x < width; x++)
+            {
+                Vector2 left = new Vector2(), up = new Vector2(); Vector2 p = ToVec2(points[x, y].Position); if (x > 1)
+                {
+                    left = ToVec2(points[x - 1, y].Position);
+                    float thickness = y % 3 == 1 ? 3f : 1f;
+                    spriteBatch.DrawLine(left, p, color, thickness);
+                }
+                if (y > 1)
+                {
+                    up = ToVec2(points[x, y - 1].Position);
+                    float thickness = x % 3 == 1 ? 3f : 1f;
+                    spriteBatch.DrawLine(up, p, color, thickness);
+                }
+            }
+        }
+    }
+
+    void DrawLine(Vector2 start, Vector2 end, Color color, float duration = 0.2f)
+    {
+        GameObject myLine = new GameObject();
+        myLine.transform.position = start;
+        myLine.AddComponent<LineRenderer>();
+        LineRenderer lr = myLine.GetComponent<LineRenderer>();
+        lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
+        lr.SetColors(color, color);
+        lr.SetWidth(0.1f, 0.1f);
+        lr.SetPosition(0, start);
+        lr.SetPosition(1, end);
+        GameObject.Destroy(myLine, duration);
+    }*/
 
     public void ApplyDirectedForce(Vector3 force, Vector3 position, float radius)
     {
